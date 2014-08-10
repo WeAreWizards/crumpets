@@ -1,7 +1,9 @@
 @import "normalize";
 
 @import "settings";
-@import "foundation";
+
+@import "foundation/components/type";
+@import "foundation/components/grid";
 
 // Or selectively include components
 // @import

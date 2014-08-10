@@ -1,6 +1,5 @@
 var gulp = require('gulp');
 var plugins = require('gulp-load-plugins')();
-plugins.sass = require('gulp-ruby-sass');
 plugins.ngAnnotate = require('gulp-ng-annotate');
 
 var runSequence = require('run-sequence');
@@ -58,7 +57,12 @@ var karma = require('gulp-karma')({
 
 gulp.task('sass', function () {
     return gulp.src(globs.sass)
-        .pipe(plugins.sass({style: isDist ? 'compressed' : 'nested'}))
+        .pipe(plugins.sass(
+            {
+                style: isDist ? 'compressed' : 'nested',
+                errLogToConsole: true
+            }
+        ))
         .pipe(gulp.dest(destinations.css));
 });
 
