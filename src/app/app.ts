@@ -7,9 +7,9 @@ function appConfig($urlRouterProvider: ng.ui.IUrlRouterProvider) {
 }
 
 angular
-  .module("ngBoilerplate", [
+  .module("crumpets", [
     "templates",
-    "ngBoilerplate.home",
+    "crumpets.home",
     "ui.router.state"
   ])
   .config(appConfig);

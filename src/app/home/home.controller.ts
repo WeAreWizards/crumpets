@@ -5,8 +5,7 @@ class HomeController implements core.IHomeController {
   greeting: string;
 
   /* @ngInject */
-  constructor(private $rootScope: core.IRootScope) {
-    $rootScope.pageTitle = "Hello";
+  constructor() {
     this.greeting = "hello";
   }
 }
