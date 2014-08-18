@@ -2,7 +2,7 @@
 
 
 /* @ngInject */
-function appConfig($urlRouterProvider: ng.ui.IUrlRouterProvider) {
+function appConfig($urlRouterProvider: ng.ui.IUrlRouterProvider, $stateProvider: ng.ui.IStateProvider) {
   $urlRouterProvider.otherwise("/home");
 }
 
