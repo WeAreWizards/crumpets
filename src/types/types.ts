@@ -4,6 +4,7 @@
 /// <reference path="libs/angular-ui-router.d.ts"/>
 /// <reference path="libs/restangular.d.ts"/>
 /// <reference path="libs/lodash.d.ts"/>
+/// <reference path="libs/d3.d.ts"/>
 
 
 // API TYPES
