@@ -28,9 +28,15 @@ class HomeController implements core.IHomeController {
       $location.search("pi", self.expected_price_increase);
       $location.search("ri", self.expected_rent_increase);
       $location.search("mr", self.mortgage_rate);
-    }
+      self.redraw();
+    };
 
     $scope.$watch(function() { return self.price; }, update_function);
+  }
+
+  redraw() {
+    var price = d3.select("#price");
+    price.html("why hello");
   }
 }
 

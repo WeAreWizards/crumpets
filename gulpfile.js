@@ -33,6 +33,7 @@ var destinations = {
 // Find out why uglifying angular doesn't work
 var vendoredLibs = [
     'vendor/angular.js',
+    'vendor/d3.js',
     'vendor/ui-router.js',
     'vendor/lodash.js',
 ];

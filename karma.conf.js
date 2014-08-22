@@ -11,6 +11,7 @@ module.exports = function (config) {
         ],
         files: [
             'vendor/angular.js',
+            'vendor/d3.js',
             'vendor/ui-router.js',
             'vendor/angular-mocks.js',
             'vendor/lodash.js',
