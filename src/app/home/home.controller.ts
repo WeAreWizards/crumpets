@@ -11,6 +11,11 @@ class HomeController implements core.IHomeController {
   /* @ngInject */
   constructor(private $scope: ng.IScope, private $location: ng.ILocationService) {
     var self = this;
+
+    // We want copy-pastable URLs so we're storing all the default
+    // values immediately as URL params. We then synchronise page and
+    // URL every time any value changes. Using short names to avoid
+    // uber-long URLs.
     this.price = $location.search().p || 250000;
     this.rent = $location.search().r || 1400;
     this.expected_rent_increase = $location.search().ri || 5.0;
