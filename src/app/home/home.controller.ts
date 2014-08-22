@@ -36,7 +36,15 @@ class HomeController implements core.IHomeController {
 
   redraw() {
     var price = d3.select("#price");
-    price.html("why hello");
+    price
+      .selectAll("div")
+      .data(d3.range(20))
+      .enter()
+      .append("div")
+      .style("width", "10px")
+      .style("float", "left")
+      .style("background", "#a00")
+      .style("height", function(d, i) {return ""+d+"px";});
   }
 }
 
