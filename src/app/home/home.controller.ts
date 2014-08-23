@@ -10,8 +10,6 @@ class HomeController implements core.IHomeController {
 
   /* @ngInject */
   constructor(private $scope: ng.IScope, private $location: ng.ILocationService) {
-    var self = this;
-
     // We want copy-pastable URLs so we're storing all the default
     // values immediately as URL params. We then synchronise page and
     // URL every time any value changes. Using short names to avoid
@@ -22,16 +20,16 @@ class HomeController implements core.IHomeController {
     this.expected_price_increase = $location.search().p || 4.0;
     this.mortgage_rate = $location.search().mr || 4.0;
 
-    var update_function = function() {
-      $location.search("p", self.price);
-      $location.search("r", self.rent);
-      $location.search("pi", self.expected_price_increase);
-      $location.search("ri", self.expected_rent_increase);
-      $location.search("mr", self.mortgage_rate);
-      self.redraw();
+    var update_function = () => {
+      $location.search("p", this.price);
+      $location.search("r", this.rent);
+      $location.search("pi", this.expected_price_increase);
+      $location.search("ri", this.expected_rent_increase);
+      $location.search("mr", this.mortgage_rate);
+      this.redraw();
     };
 
-    $scope.$watch(function() { return self.price; }, update_function);
+    $scope.$watch(function() { return this.price; }, update_function);
   }
 
   redraw() {
@@ -44,7 +42,7 @@ class HomeController implements core.IHomeController {
       .style("width", "10px")
       .style("float", "left")
       .style("background", "#a00")
-      .style("height", function(d, i) {return ""+d+"px";});
+      .style("height", function(d, i) {return "" + d + "px"; });
   }
 }
 
