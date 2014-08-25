@@ -1,3 +1,5 @@
+/// <reference path="../../types/types.ts" />
+
 function monthly_rate(principal: number, r: number, t: number): number {
   return principal * r * Math.pow(r + 1, t) / (Math.pow(r + 1, t) - 1);
 }

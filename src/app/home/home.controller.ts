@@ -15,12 +15,15 @@ class HomeController implements core.IHomeController {
     // values immediately as URL params. We then synchronise page and
     // URL every time any value changes. Using short names to avoid
     // uber-long URLs.
+    var self = this;
+
     this.price = $location.search().p || 250000;
     this.rent = $location.search().r || 1400;
     this.expected_rent_increase = $location.search().ri || 5.0;
     this.expected_price_increase = $location.search().p || 4.0;
     this.mortgage_rate = $location.search().mr || 4.0;
 
+    // remember injected mortgage module
     this.mortgage = mortgage;
 
     var update_function = () => {
@@ -32,7 +35,7 @@ class HomeController implements core.IHomeController {
       this.redraw();
     };
 
-    $scope.$watch(function() { return this.price; }, update_function);
+    $scope.$watch(function() { return self.price; }, update_function);
   }
 
   redraw() {
