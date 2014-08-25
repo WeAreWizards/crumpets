@@ -1,3 +1,5 @@
+/// <reference path="../../../app/home/mortgage.ts"/>
+
 describe('Unit: Home module', function() {
 
   beforeEach(module('crumpets.home'));
