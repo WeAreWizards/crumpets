@@ -13,6 +13,7 @@ function homeConfig($stateProvider: ng.ui.IStateProvider) {
 angular
   .module("crumpets.home", [
     "home.index",
+    "home.mortgage",
     "ui.router.state"
   ])
   .config(homeConfig);

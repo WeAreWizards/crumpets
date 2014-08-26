@@ -1,16 +1,19 @@
 /// <reference path="../../types/types.ts" />
-/// <reference path="./mortgage.ts" />
 
-class HomeController implements core.IHomeController {
+class HomeController implements app.IHomeController {
   price: number;
   rent: number;
   expected_price_increase: number;
   expected_rent_increase: number;
   mortgage_rate: number;
-  mortgage;
+  mortgage: app.IMortgageFactory;
 
   /* @ngInject */
-  constructor(private $scope: ng.IScope, private $location: ng.ILocationService, mortgage) {
+  constructor(
+    private $scope: ng.IScope,
+    private $location: ng.ILocationService,
+    private Mortgage: app.IMortgageFactory
+  ) {
     // We want copy-pastable URLs so we're storing all the default
     // values immediately as URL params. We then synchronise page and
     // URL every time any value changes. Using short names to avoid
@@ -23,8 +26,7 @@ class HomeController implements core.IHomeController {
     this.expected_price_increase = $location.search().p || 4.0;
     this.mortgage_rate = $location.search().mr || 4.0;
 
-    // remember injected mortgage module
-    this.mortgage = mortgage;
+    this.mortgage = Mortgage.create(245000, 5, 0.037 / 12, 0.07 / 12, 12 * 25);
 
     var update_function = () => {
       $location.search("p", this.price);
@@ -39,8 +41,8 @@ class HomeController implements core.IHomeController {
   }
 
   redraw() {
-    var A_initial, A_followup = this.mortgage.progression(245000, 5, 0.037 / 12, 0.07 / 12, 12 * 25);
-    console.log(A_initial, A_followup);
+    var progression = this.mortgage.calculateProgression();
+    console.log(progression);
     var price = d3.select("#price");
     price
       .selectAll("div")
