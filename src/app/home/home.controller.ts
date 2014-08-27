@@ -58,6 +58,6 @@ class HomeController implements app.IHomeController {
 
 angular
   .module("home.index", [
-    "mortgage"
+    'home.mortgage'
   ])
   .controller("HomeController", HomeController);
