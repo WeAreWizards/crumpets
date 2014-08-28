@@ -1,18 +1,23 @@
 /// <reference path="../../types/types.ts" />
 
-class HomeController implements app.IHomeController {
+class HomeController {
   price: number;
-  rent: number;
-  expected_price_increase: number;
-  expected_rent_increase: number;
-  mortgage_rate: number;
-  mortgage: app.IMortgageFactory;
+  down_payment: number;
+  initial_rate: number;
+  duration_fixed: number;
+  current_rent: number;
+  expected_stay_duration: number;
+  followup_rate: number;
+  price_growth_rate: number;
+  rent_growth_rate: number;
+  inflation_rate: number;
+  roi: number;
+  yearly_maintenance: number;
 
   /* @ngInject */
   constructor(
     private $scope: ng.IScope,
-    private $location: ng.ILocationService,
-    private Mortgage: app.IMortgageFactory
+    private $location: ng.ILocationService
   ) {
     // We want copy-pastable URLs so we're storing all the default
     // values immediately as URL params. We then synchronise page and
@@ -21,19 +26,19 @@ class HomeController implements app.IHomeController {
     var self = this;
 
     this.price = $location.search().p || 250000;
-    this.rent = $location.search().r || 1400;
-    this.expected_rent_increase = $location.search().ri || 5.0;
-    this.expected_price_increase = $location.search().p || 4.0;
-    this.mortgage_rate = $location.search().mr || 4.0;
-
-    this.mortgage = Mortgage.create(245000, 5, 0.037 / 12, 0.07 / 12, 12 * 25);
+    this.down_payment = $location.search().dp || 50000;
+    this.initial_rate = $location.search().ir || 0.04;
+    this.duration_fixed = $location.search().df || 5;
+    this.current_rent = $location.search().cr || 1100;
+    this.expected_stay_duration = $location.search().esd || 6;
+    this.followup_rate = $location.search().fr || 8;
+    this.price_growth_rate = $location.search().pgr || 0.05;
+    this.rent_growth_rate = $location.search().rgr || 0.05;
+    this.inflation_rate = $location.search().ir || 0.026;
+    this.roi = $location.search().roi || 0.01;
+    this.yearly_maintenance = $location.search().ym || 1200;
 
     var update_function = () => {
-      $location.search("p", this.price);
-      $location.search("r", this.rent);
-      $location.search("pi", this.expected_price_increase);
-      $location.search("ri", this.expected_rent_increase);
-      $location.search("mr", this.mortgage_rate);
       this.redraw();
     };
 
@@ -41,8 +46,7 @@ class HomeController implements app.IHomeController {
   }
 
   redraw() {
-    var progression = this.mortgage.calculateProgression();
-    console.log(progression);
+    console.log(this.progression);
     var price = d3.select("#price");
     price
       .selectAll("div")
@@ -54,10 +58,37 @@ class HomeController implements app.IHomeController {
       .style("background", "#a00")
       .style("height", function(d, i) {return "" + d + "px"; });
   }
+
+  // Mortgage functions
+  monthly_rate(principal: number, r: number, t: number): number {
+    return principal * r * Math.pow(r + 1, t) / (Math.pow(r + 1, t) - 1);
+  }
+
+  principal_left(principal: number, r: number, A: number, t: number): number {
+    var s: number = 0;
+    for (var i = 0; i < t; i++) {
+      s += Math.pow(1 + r, i);
+    }
+    return principal * Math.pow(1 + r, t) - A * s;
+  }
+
+  progression(
+    principal: number,
+    fixed_years: number,
+    initial_rate: number,
+    followup_rate: number,
+    total_duration_month: number): number[]
+  {
+    var A_initial = this.monthly_rate(principal, initial_rate, total_duration_month);
+    var left = this.principal_left(principal, initial_rate, A_initial, fixed_years);
+    var A_followup = this.monthly_rate(left, followup_rate, total_duration_month - fixed_years);
+
+    return [A_initial, A_followup];
+  }
+
 }
 
 angular
   .module("home.index", [
-    'home.mortgage'
   ])
   .controller("HomeController", HomeController);

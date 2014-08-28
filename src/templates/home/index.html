@@ -2,44 +2,49 @@
 
 <p>House price <input ng-model="vm.price"></p>
 
-<p>Down payment <input ng-model="vm.price"></p>
+<p>Down payment <input ng-model="vm.down_payment"></p>
 
-<p>Initial mortgage rate?<input ng-model="vm.price"></p>
+<p>Initial mortgage rate?<input ng-model="vm.initial_rate"></p>
 
-<p>Duration of fixed mortgage?<input ng-model=""></p>
+<p>Duration of fixed mortgage?<input ng-model="vm.duration_fixed"></p>
 
-<p>what's your current rent?<input ng-model="vm.price"></p>
+<p>what's your current rent?<input ng-model="vm.current_rent"></p>
 
-<p>How long are you planning on staying?<input ng-model="vm.price"></p>
+<p>How long are you planning on staying?<input ng-model="vm.expected_stay_duration"></p>
 
 
 <h2>Expecting the future</h2>
 
-<p>Rate after fixed term ends?<input ng-model="vm.price"></p> (default = 7%)
+<p>Rate after fixed term ends?<input ng-model="vm.followup_rate"></p>
 
 Common scenarios:
 
 5% 10% 15%
 
-<p>Home price growth rate?<input ng-model="vm.price"></p>
+<p>Home price growth rate?<input ng-model="vm.price_growth_rate"></p>
 
-<p>Rent growth rate?<input ng-model="vm.price"></p>
+<p>Rent growth rate?<input ng-model="vm.rent_growth_rate"></p>
 
-<p>Inflation?<input ng-model="vm.price"></p>
+<p>Inflation?<input ng-model="vm.inflation_rate"></p>
 
-<p>Return on investement?<input ng-model="vm.price"></p>
+<p>Return on investement?<input ng-model="vm.roi"></p>
 
 
 <h2>Keeping the status quo</h2>
 
-<p>Yearly maintenance<input ng-model="vm.price"></p>
+<p>Yearly maintenance<input ng-model="vm.yearly_maintenance"></p>
 
 
 
 <h2>Other stuff</h2>
 
-<p>Total duration of mortgage?<input ng-model=""></p> (usually 25 years).
+<p>Total duration of mortgage?<input ng-model="mortgage_duration"></p> (usually 25 years).
 
+<p>Paying for furniture?<input ng-model="furniture"></p>
+
+
+
+How many crumpets is this in total / per month.
 
 
 <div id="price"></div>
