@@ -59,7 +59,7 @@ gulp.task('sass', function () {
     return gulp.src(globs.sass)
         .pipe(plugins.sass(
             {
-                style: isDist ? 'compressed' : 'nested',
+                outputStyle: isDist ? 'compressed' : 'nested',
                 errLogToConsole: true
             }
         ))
