@@ -23,7 +23,6 @@ class HomeController {
     // values immediately as URL params. We then synchronise page and
     // URL every time any value changes. Using short names to avoid
     // uber-long URLs.
-    var self = this;
 
     this.price = $location.search().p || 250000;
     this.down_payment = $location.search().dp || 50000;
@@ -42,7 +41,7 @@ class HomeController {
       this.redraw();
     };
 
-    $scope.$watch(function() { return self.price; }, update_function);
+    $scope.$watch(() => { return this.price; }, update_function);
   }
 
   redraw() {
