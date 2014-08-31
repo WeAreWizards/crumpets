@@ -72,10 +72,12 @@ class HomeController {
     }, update_function);
   }
 
-
-  buy_total_recurring_sum(monthly_rates: IMonthlyRate,
-                          fixed_years: number,
-                          expected_stay_duration: number): number {
+  /**
+   * How much will we pay for the mortgage rates over the expected_stay_duration?
+   */
+  buy_mortgage_total_recurring_sum(monthly_rates: IMonthlyRate,
+                                   fixed_years: number,
+                                   expected_stay_duration: number): number {
     // sum together the money to be paid for the years the user is staying.
     var sum = 0;
     for (var i = 0; i < expected_stay_duration * 12; i++) {
@@ -107,12 +109,16 @@ class HomeController {
       this.mortgage_duration_years * 12
     );
 
-    var total = this.buy_total_recurring_sum(
+    var total = this.buy_mortgage_total_recurring_sum(
       monthly_rates, this.fixed_years, this.expected_stay_duration);
     return this.rent_per_month_from_total(
       total, this.expected_stay_duration, this.rent_growth_rate);
   }
 
+  /**
+   * Given a total sum how much rent would that be per month (includes
+   * expected rent increases).
+   */
   rent_per_month_from_total(total: number, years: number, rent_increase: number) : number {
     // We know how much the total costs will be for a house and we
     // need to solve for the rent equivalent. Rent usually increases
@@ -148,11 +154,18 @@ class HomeController {
       .style("height", function(d, i) {return "" + d + "px"; });
   }
 
-  // Mortgage functions
+  /**
+   * Monthly rate for given repayment rate, principal and number of
+   * repayment periods.
+   */
   monthly_rate(principal: number, r: number, t: number): number {
     return principal * r * Math.pow(r + 1, t) / (Math.pow(r + 1, t) - 1);
   }
 
+  /**
+   * Calculate how much is left of the principal after paying the
+   * monthly rate A for t months.
+   */
   principal_left(principal: number, r: number, A: number, t: number): number {
     var s: number = 0;
     for (var i = 0; i < t; i++) {
@@ -161,6 +174,9 @@ class HomeController {
     return principal * Math.pow(1 + r, t) - A * s;
   }
 
+  /**
+   * How much are we paying for the first fixed_months, how much after?
+   */
   monthly_rates(
     principal: number,
     fixed_months: number,
