@@ -19,6 +19,8 @@ interface IPresentableResult {
   buy_recurring_costs: number;
   buy_opportunity_costs: number;
   buy_transaction_costs: number;
+  buy_cost: number;
+  buy_profit: number;
 }
 
 class HomeController {
@@ -138,19 +140,44 @@ class HomeController {
       this.down_payment * Math.pow(1 + this.roi / 100.0, this.expected_stay_duration)
         - this.down_payment);
 
-    var buy_total = mortgage_total + this.buy_upkeep_total(
+    var buy_recurring_costs = mortgage_total + this.buy_upkeep_total(
       this.yearly_maintenance, this.inflation_rate, this.expected_stay_duration);
 
     // £2000 for surveyor + solicitor + other fluff.
     // NB don't remove 1.0 * because javascript is a monkey language.
     var buy_transaction_costs : number = this.stamp_duty(this.price) + 2000 + 1.0 * this.down_payment;
 
+    var final_sale_price = this.price * Math.pow(
+      1 + this.price_growth_rate / 100.0, this.expected_stay_duration);
+
+    var principal_to_return = this.principal_to_return(
+      this.price - this.down_payment,
+      this.fixed_years * 12,
+      this.initial_rate / 12.0 / 100.0,
+      this.followup_rate / 12.0 / 100.0,
+      this.expected_stay_duration * 12,
+      this.mortgage_duration_years * 12
+    );
+
+    // NB that we have to return the principal left to the bank after
+    // we're moving out.
+    // TODO(tom): subtract average estate agent fees for sale.
+    var buy_profit = final_sale_price - principal_to_return;
+
+    var buy_cost = (
+      buy_recurring_costs
+        + buy_transaction_costs
+        + buy_opportunity_costs
+        - buy_profit);
+
     return {
       rent_equivalent: this.rent_per_month_from_total(
-        buy_total, this.expected_stay_duration, this.rent_growth_rate),
-      buy_recurring_costs: buy_total,
+        buy_cost, this.expected_stay_duration, this.rent_growth_rate),
+      buy_recurring_costs: buy_recurring_costs,
       buy_opportunity_costs: buy_opportunity_costs,
-      buy_transaction_costs: buy_transaction_costs
+      buy_transaction_costs: buy_transaction_costs,
+      buy_cost: buy_cost,
+      buy_profit: buy_profit
     };
   }
 
@@ -223,6 +250,36 @@ class HomeController {
       s += Math.pow(1 + r, i);
     }
     return principal * Math.pow(1 + r, t) - A * s;
+  }
+
+  /**
+   * How much principal do we have to return to the bank after selling on after N years?
+   */
+  principal_to_return(
+    principal: number,
+    fixed_months: number,
+    initial_rate: number,
+    followup_rate: number,
+    expected_stay_duration: number,
+    total_duration_month: number): number {
+
+      var A_initial = this.monthly_rate(principal, initial_rate, total_duration_month);
+      var left = this.principal_left(principal, initial_rate, A_initial, fixed_months);
+      var A_followup = this.monthly_rate(left, followup_rate, total_duration_month - fixed_months);
+
+      // If the expected_stay_duration is shorter than the fixed term
+      // we can calculate the principal left from the fixed
+      // rate. Otherwise we need to use the followup term.
+      if (expected_stay_duration - fixed_months <= 0) {
+        return this.principal_left(principal, initial_rate, A_initial, expected_stay_duration);
+      }
+
+      return this.principal_left(
+        left,
+        followup_rate,
+        A_followup,
+        expected_stay_duration - fixed_months
+      );
   }
 
   /**

@@ -7,7 +7,7 @@
       <th>Buy</th>
     </tr>
     <tr>
-      <td>Transaction costs</td>
+      <td>Initial costs</td>
       <td>£{{ vm.rent_transaction_costs() }}</td>
       <td>£{{ vm.presentable_result().buy_transaction_costs|number:0 }}</td>
     </tr>
@@ -20,6 +20,16 @@
       <td>Opportunity costs</td>
       <td>£{{ vm.rent_opportunity_costs() }}</td>
       <td>£{{ vm.presentable_result().buy_opportunity_costs|number:0 }}</td>
+    </tr>
+    <tr>
+      <td>Moving out profit</td>
+      <td>£{{ vm.rent_opportunity_costs() }}</td>
+      <td>£{{ vm.presentable_result().buy_profit|number:0 }}</td>
+    </tr>
+    <tr>
+      <td>total</td>
+      <td>£{{ vm.rent_opportunity_costs() }}</td>
+      <td>£{{ vm.presentable_result().buy_cost|number:0 }}</td>
     </tr>
   </table>
   <p>You'll safe £{{ vm.save_vs_rent() }} over your current rent.
