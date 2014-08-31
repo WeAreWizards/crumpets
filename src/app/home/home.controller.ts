@@ -145,7 +145,7 @@ class HomeController {
 
     // £2000 for surveyor + solicitor + other fluff.
     // NB don't remove 1.0 * because javascript is a monkey language.
-    var buy_transaction_costs : number = this.stamp_duty(this.price) + 2000 + 1.0 * this.down_payment;
+    var buy_transaction_costs : number = this.stamp_duty(this.price) / 100.0 * this.price  + 2000 + 1.0 * this.down_payment;
 
     var final_sale_price = this.price * Math.pow(
       1 + this.price_growth_rate / 100.0, this.expected_stay_duration);
