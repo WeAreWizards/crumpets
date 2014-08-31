@@ -1,11 +1,28 @@
 /// <reference path="../../types/types.ts" />
 
+/**
+ * Manual testing checklist:
+ * - Does every input field alter a parameter in the URL?
+ * - Are all inputs validated? E.g. down_payment < price.
+ * - Is every input parameter used in some calculation?
+ *    - alternatively: does every input change the result?
+ * - Rendering on common screen sizes?
+ */
+
 interface IMonthlyRate {
   initial: number;
   followup: number;
 }
 
+interface IPresentableResult {
+  rent_equivalent: number;
+  buy_recurring_costs: number;
+  buy_opportunity_costs: number;
+  buy_transaction_costs: number;
+}
+
 class HomeController {
+  // TODO(tom): move to camelCase.
   price: number;
   down_payment: number;
   initial_rate: number;
@@ -61,7 +78,7 @@ class HomeController {
       this.redraw();
     };
 
-    // TODO(tehunger): There's probably a simpler way to watch all
+    // TODO(tom): There's probably a simpler way to watch all
     // values in scope.
     $scope.$watch(() => {
       return (this.price + this.down_payment
@@ -99,8 +116,9 @@ class HomeController {
    * various fixed costs, subtract opportunity costs such as the
    * return-on-invesment for the down payment.
    */
-  rent_equivalent() : number {
-    // TODO(tehunger): Add fixed cost to price or assume that people have the money?
+  presentable_result() : IPresentableResult {
+    // TODO(tom): We probably want to cache this calculation with a $watch handler.
+    // TODO(tom): Add fixed cost to price or assume that people have the money?
     var monthly_rates = this.monthly_rates(
       this.price - this.down_payment,
       this.fixed_years * 12,
@@ -109,10 +127,41 @@ class HomeController {
       this.mortgage_duration_years * 12
     );
 
-    var total = this.buy_mortgage_total_recurring_sum(
+    // total mortgage payments over expected_stay_duration
+    var mortgage_total = this.buy_mortgage_total_recurring_sum(
       monthly_rates, this.fixed_years, this.expected_stay_duration);
-    return this.rent_per_month_from_total(
-      total, this.expected_stay_duration, this.rent_growth_rate);
+
+    // How much would we have made on our down payment?
+    // TODO(tom): Do we need to subtract inflation? Probably ..
+    var buy_opportunity_costs = (
+      this.down_payment * Math.pow(1 + this.roi / 100.0, this.expected_stay_duration)
+        - this.down_payment);
+
+    var buy_total = mortgage_total + this.buy_upkeep_total(
+      this.yearly_maintenance, this.inflation_rate, this.expected_stay_duration);
+
+    // £2000 for surveyor + solicitor + other fluff.
+    // NB don't remove 1.0 * because javascript is a monkey language.
+    var buy_transaction_costs : number = this.stamp_duty(this.price) + 2000 + 1.0 * this.down_payment;
+
+    return {
+      rent_equivalent: this.rent_per_month_from_total(
+        buy_total, this.expected_stay_duration, this.rent_growth_rate),
+      buy_recurring_costs: buy_total,
+      buy_opportunity_costs: buy_opportunity_costs,
+      buy_transaction_costs: buy_transaction_costs
+    };
+  }
+
+  /**
+   * Assume that the yearly costs increase with inflation.
+   */
+  buy_upkeep_total(initial_yearly: number, inflation_rate: number, expected_stay_duration: number) {
+    var sum = 0;
+    for (var i = 0; i < expected_stay_duration; i++) {
+      sum += initial_yearly * Math.pow(1 + inflation_rate / 100.0, i);
+    }
+    return sum;
   }
 
   /**
@@ -129,6 +178,7 @@ class HomeController {
     for (var i = 0; i < years; i++) {
       sum += Math.pow(1 + rent_increase / 100.0, i);
     }
+
     return total / 12 / sum;
   }
 

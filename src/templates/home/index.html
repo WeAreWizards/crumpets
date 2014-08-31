@@ -1,5 +1,5 @@
 <div style="width: 400px;float: right;">
-  <h2>If you can rent a place for £{{ vm.rent_equivalent()|number:0 }} then renting is cheaper.</h2>
+  <h2>If you can rent a place for £{{ vm.presentable_result().rent_equivalent|number:0 }} then renting is cheaper.</h2>
   <table>
     <tr>
       <th>Cost after {{ vm.expected_stay_duration }} years</th>
@@ -9,17 +9,17 @@
     <tr>
       <td>Transaction costs</td>
       <td>£{{ vm.rent_transaction_costs() }}</td>
-      <td>£{{ vm.buy_transaction_costs() }}</td>
+      <td>£{{ vm.presentable_result().buy_transaction_costs|number:0 }}</td>
     </tr>
     <tr>
       <td>Recurring costs</td>
       <td>£{{ vm.rent_recurring_costs() }}</td>
-      <td>£{{ vm.buy_recurring_costs() }}</td>
+      <td>£{{ vm.presentable_result().buy_recurring_costs|number:0 }}</td>
     </tr>
     <tr>
       <td>Opportunity costs</td>
       <td>£{{ vm.rent_opportunity_costs() }}</td>
-      <td>£{{ vm.buy_opportunity_costs() }}</td>
+      <td>£{{ vm.presentable_result().buy_opportunity_costs|number:0 }}</td>
     </tr>
   </table>
   <p>You'll safe £{{ vm.save_vs_rent() }} over your current rent.
