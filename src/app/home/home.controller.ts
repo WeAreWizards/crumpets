@@ -1,10 +1,15 @@
 /// <reference path="../../types/types.ts" />
 
+interface IMonthlyRate {
+  initial: number;
+  followup: number;
+}
+
 class HomeController {
   price: number;
   down_payment: number;
   initial_rate: number;
-  duration_fixed: number;
+  fixed_years: number;
   current_rent: number;
   expected_stay_duration: number;
   followup_rate: number;
@@ -28,7 +33,7 @@ class HomeController {
     this.price = $location.search().p || 250000;
     this.down_payment = $location.search().dp || 50000;
     this.initial_rate = $location.search().ir || 4;
-    this.duration_fixed = $location.search().df || 5;
+    this.fixed_years = $location.search().fy || 5;
     this.current_rent = $location.search().cr || 1100;
     this.expected_stay_duration = $location.search().esd || 6;
     this.followup_rate = $location.search().fr || 8;
@@ -43,7 +48,7 @@ class HomeController {
       $location.search("p", this.price);
       $location.search("dp", this.down_payment);
       $location.search("ir", this.initial_rate);
-      $location.search("df", this.duration_fixed);
+      $location.search("fy", this.fixed_years);
       $location.search("cr", this.current_rent);
       $location.search("esd", this.expected_stay_duration);
       $location.search("fr", this.followup_rate);
@@ -56,20 +61,69 @@ class HomeController {
       this.redraw();
     };
 
+    // TODO(tehunger): There's probably a simpler way to watch all
+    // values in scope.
     $scope.$watch(() => {
-      return this.price + this.down_payment + this.initial_rate + this.duration_fixed + this.current_rent + this.expected_stay_duration + this.followup_rate + this.price_growth_rate + this.rent_growth_rate + this.inflation_rate + this.roi + this.yearly_maintenance + this.mortgage_duration_years;
+      return (this.price + this.down_payment
+        + this.initial_rate + this.fixed_years
+        + this.current_rent + this.expected_stay_duration + this.followup_rate
+        + this.price_growth_rate + this.rent_growth_rate + this.inflation_rate
+        + this.roi + this.yearly_maintenance + this.mortgage_duration_years);
     }, update_function);
   }
 
-  // Output functions
+
+  buy_total_recurring_sum(monthly_rates: IMonthlyRate,
+                          fixed_years: number,
+                          expected_stay_duration: number): number {
+    // sum together the money to be paid for the years the user is staying.
+    var sum = 0;
+    for (var i = 0; i < expected_stay_duration * 12; i++) {
+      if (i < fixed_years * 12) {
+        sum += monthly_rates.initial;
+      } else {
+        sum += monthly_rates.followup;
+      }
+    }
+    return sum;
+  }
 
   /**
    * How much rent could we afford to break even after we stayed the
    * number of years.
+   *
+   * The basic idea is to sum together the costs of renting and buying
+   * over the intended duration of stay. To that we need to add
+   * various fixed costs, subtract opportunity costs such as the
+   * return-on-invesment for the down payment.
    */
   rent_equivalent() : number {
-    // Hoe mu
-    return 100;
+    // TODO(tehunger): Add fixed cost to price or assume that people have the money?
+    var monthly_rates = this.monthly_rates(
+      this.price - this.down_payment,
+      this.fixed_years * 12,
+      this.initial_rate / 12.0 / 100.0,
+      this.followup_rate / 12.0 / 100.0,
+      this.mortgage_duration_years * 12
+    );
+
+    var total = this.buy_total_recurring_sum(
+      monthly_rates, this.fixed_years, this.expected_stay_duration);
+    return this.rent_per_month_from_total(
+      total, this.expected_stay_duration, this.rent_growth_rate);
+  }
+
+  rent_per_month_from_total(total: number, years: number, rent_increase: number) : number {
+    // We know how much the total costs will be for a house and we
+    // need to solve for the rent equivalent. Rent usually increases
+    // once a year so  we need to solve
+    // rent + 1.05 * rent + 1.05 ** 2 * rent + .... == total
+    // rent (1 + 1.05 + 1.05**2 + ...) == total
+    var sum = 0;
+    for (var i = 0; i < years; i++) {
+      sum += Math.pow(1 + rent_increase / 100.0, i);
+    }
+    return total / 12 / sum;
   }
 
   save_vs_rent() : number {
@@ -82,7 +136,6 @@ class HomeController {
 
   // draw sparklines
   redraw() {
-    console.log(this.progression);
     var price = d3.select("#price");
     price
       .selectAll("div")
@@ -108,20 +161,34 @@ class HomeController {
     return principal * Math.pow(1 + r, t) - A * s;
   }
 
-  progression(
+  monthly_rates(
     principal: number,
-    fixed_years: number,
+    fixed_months: number,
     initial_rate: number,
     followup_rate: number,
-    total_duration_month: number): number[]
-  {
-    var A_initial = this.monthly_rate(principal, initial_rate, total_duration_month);
-    var left = this.principal_left(principal, initial_rate, A_initial, fixed_years);
-    var A_followup = this.monthly_rate(left, followup_rate, total_duration_month - fixed_years);
+    total_duration_month: number): IMonthlyRate {
 
-    return [A_initial, A_followup];
+      var A_initial = this.monthly_rate(principal, initial_rate, total_duration_month);
+      var left = this.principal_left(principal, initial_rate, A_initial, fixed_months);
+      var A_followup = this.monthly_rate(left, followup_rate, total_duration_month - fixed_months);
+
+      return {initial: A_initial, followup: A_followup};
   }
 
+  stamp_duty(price: number): number {
+    // from Cincent's model
+    // https://www.moneyadviceservice.org.uk/en/tools/house-buying/stamp-duty-calculator
+
+    // let's hope there are no trillion dollar flats ...
+    var steps = [125000, 250000, 500000, 1000000, 2000000, 1e12];
+    var duty =  [0,      1,      3,      4,       5,       7];
+
+    for (var i = 0; i < steps.length; i++) {
+      if (price <= steps[i]) {
+        return duty[i];
+      }
+    }
+  }
 }
 
 angular

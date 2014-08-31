@@ -1,5 +1,5 @@
 <div style="width: 400px;float: right;">
-  <h2>If you can rent a place for £{{ vm.rent_equivalent() }} then renting is cheaper.</h2>
+  <h2>If you can rent a place for £{{ vm.rent_equivalent()|number:0 }} then renting is cheaper.</h2>
   <table>
     <tr>
       <th>Cost after {{ vm.expected_stay_duration }} years</th>
@@ -35,7 +35,7 @@
 
 <p>Initial mortgage rate?<input ng-model="vm.initial_rate"></p>
 
-<p>Duration of fixed mortgage?<input ng-model="vm.duration_fixed"></p>
+<p>Duration of fixed mortgage?<input ng-model="vm.fixed_years"></p>
 
 <p>what's your current rent?<input ng-model="vm.current_rent"></p>
 
