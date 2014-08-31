@@ -34,6 +34,8 @@
   </table>
   <p>You'll safe £{{ vm.save_vs_rent() }} over your current rent.
   </p>
+  <p><a ng-click="vm.update_url()">Share</a>
+  </p>
   <p>That's {{ vm.crumpet_equivalent() }} crumpets!
   </p>
 </div>
@@ -78,7 +80,6 @@ Common scenarios:
 <h2>Other stuff</h2>
 
 <p>Total duration of mortgage?<input ng-model="vm.mortgage_duration_years"></p> (usually 25 years).
-
 
 
 <div id="price"></div>

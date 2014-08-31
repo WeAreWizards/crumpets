@@ -62,34 +62,6 @@ class HomeController {
     this.roi = $location.search().roi || 1;
     this.yearly_maintenance = $location.search().ym || 1200;
     this.mortgage_duration_years = $location.search().mdy || 25;
-
-    var update_function = () => {
-      $location.search("p", this.price);
-      $location.search("dp", this.down_payment);
-      $location.search("ir", this.initial_rate);
-      $location.search("fy", this.fixed_years);
-      $location.search("cr", this.current_rent);
-      $location.search("esd", this.expected_stay_duration);
-      $location.search("fr", this.followup_rate);
-      $location.search("pgr", this.price_growth_rate);
-      $location.search("rgr", this.rent_growth_rate);
-      $location.search("inr", this.inflation_rate);
-      $location.search("roi", this.roi);
-      $location.search("ym", this.yearly_maintenance);
-      $location.search("mdy", this.mortgage_duration_years);
-      this.redraw();
-    };
-
-    // TODO(tom): There's probably a simpler way to watch all values
-    // in scope. I tried watchCollection on 'this' but that doesn't
-    // work.
-    $scope.$watch(() => {
-      return (this.price + this.down_payment
-        + this.initial_rate + this.fixed_years
-        + this.current_rent + this.expected_stay_duration + this.followup_rate
-        + this.price_growth_rate + this.rent_growth_rate + this.inflation_rate
-        + this.roi + this.yearly_maintenance + this.mortgage_duration_years);
-    }, update_function);
   }
 
   /**
@@ -216,6 +188,24 @@ class HomeController {
 
   crumpet_equivalent(): number {
     return 10;
+  }
+
+  update_url() {
+    this.$location.search("p", this.price);
+    this.$location.search("p", this.price);
+    this.$location.search("dp", this.down_payment);
+    this.$location.search("ir", this.initial_rate);
+    this.$location.search("fy", this.fixed_years);
+    this.$location.search("cr", this.current_rent);
+    this.$location.search("esd", this.expected_stay_duration);
+    this.$location.search("fr", this.followup_rate);
+    this.$location.search("pgr", this.price_growth_rate);
+    this.$location.search("rgr", this.rent_growth_rate);
+    this.$location.search("inr", this.inflation_rate);
+    this.$location.search("roi", this.roi);
+    this.$location.search("ym", this.yearly_maintenance);
+    this.$location.search("mdy", this.mortgage_duration_years);
+    this.redraw();
   }
 
   // draw sparklines
