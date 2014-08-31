@@ -78,8 +78,9 @@ class HomeController {
       this.redraw();
     };
 
-    // TODO(tom): There's probably a simpler way to watch all
-    // values in scope.
+    // TODO(tom): There's probably a simpler way to watch all values
+    // in scope. I tried watchCollection on 'this' but that doesn't
+    // work.
     $scope.$watch(() => {
       return (this.price + this.down_payment
         + this.initial_rate + this.fixed_years
