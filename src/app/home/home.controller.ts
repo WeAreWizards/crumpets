@@ -113,7 +113,6 @@ class HomeController {
       monthly_rates, this.fixed_years, this.expected_stay_duration);
 
     // How much would we have made on our down payment?
-    // TODO(tom): Do we need to subtract inflation? Probably ..
     var buy_opportunity_costs = (
       this.down_payment * Math.pow(1 + this.roi / 100.0, this.expected_stay_duration)
         - this.down_payment);
@@ -140,8 +139,8 @@ class HomeController {
 
     // NB that we have to return the principal left to the bank after
     // we're moving out.
-    // TODO(tom): subtract average estate agent fees for sale.
-    var buy_profit = final_sale_price - principal_to_return;
+    var estate_agent_fees = 0.018 * final_sale_price;
+    var buy_profit = final_sale_price - principal_to_return - estate_agent_fees;
 
     var buy_cost = (
       buy_recurring_costs
@@ -191,6 +190,8 @@ class HomeController {
       recurring += Math.pow(1 + (rent_increase) / 100.0, i);
       opportunity += recurring * (Math.pow(1 + roi / 100.0, i) - 1);
     }
+
+    // TODO(tom): deposit + deposit * roi after moving out + estate agent fees
 
     // monthly * (recurring + opportunity) * 12 == total
     // monthly * recurring * 12 + monthly * opportunity * 12 == total
