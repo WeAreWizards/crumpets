@@ -23,6 +23,12 @@ interface IPresentableResult {
   buy_profit: number;
 }
 
+interface IRentSplit {
+  recurring_costs: number;
+  opportunity_costs: number;
+  monthly: number;
+}
+
 class HomeController {
   // TODO(tom): move to camelCase.
   price: number;
@@ -56,7 +62,7 @@ class HomeController {
     this.current_rent = $location.search().cr || 1100;
     this.expected_stay_duration = $location.search().esd || 6;
     this.followup_rate = $location.search().fr || 8;
-    this.price_growth_rate = $location.search().pgr || 5;
+    this.price_growth_rate = $location.search().pgr || 3;
     this.rent_growth_rate = $location.search().rgr || 5;
     this.inflation_rate = $location.search().inr || 2.6;
     this.roi = $location.search().roi || 1;
@@ -120,7 +126,8 @@ class HomeController {
     var buy_transaction_costs : number = this.stamp_duty(this.price) / 100.0 * this.price  + 2000 + 1.0 * this.down_payment;
 
     var final_sale_price = this.price * Math.pow(
-      1 + this.price_growth_rate / 100.0, this.expected_stay_duration);
+      1 + this.price_growth_rate / 100.0,
+      this.expected_stay_duration);
 
     var principal_to_return = this.principal_to_return(
       this.price - this.down_payment,
@@ -142,9 +149,13 @@ class HomeController {
         + buy_opportunity_costs
         - buy_profit);
 
+    var rent_split = this.rent_per_month_from_total(
+      buy_cost, this.expected_stay_duration, this.rent_growth_rate, this.roi);
+
     return {
-      rent_equivalent: this.rent_per_month_from_total(
-        buy_cost, this.expected_stay_duration, this.rent_growth_rate),
+      rent_equivalent: rent_split.monthly,
+      rent_opportunity_costs: rent_split.opportunity_costs,
+      rent_recurring_costs: rent_split.recurring_costs,
       buy_recurring_costs: buy_recurring_costs,
       buy_opportunity_costs: buy_opportunity_costs,
       buy_transaction_costs: buy_transaction_costs,
@@ -168,18 +179,28 @@ class HomeController {
    * Given a total sum how much rent would that be per month (includes
    * expected rent increases).
    */
-  rent_per_month_from_total(total: number, years: number, rent_increase: number) : number {
+  rent_per_month_from_total(total: number, years: number, rent_increase: number, roi: number): IRentSplit {
     // We know how much the total costs will be for a house and we
     // need to solve for the rent equivalent. Rent usually increases
     // once a year so  we need to solve
     // rent + 1.05 * rent + 1.05 ** 2 * rent + .... == total
     // rent (1 + 1.05 + 1.05**2 + ...) == total
-    var sum = 0;
+    var recurring = 0;
+    var opportunity = 0;
     for (var i = 0; i < years; i++) {
-      sum += Math.pow(1 + rent_increase / 100.0, i);
+      recurring += Math.pow(1 + (rent_increase) / 100.0, i);
+      opportunity += recurring * (Math.pow(1 + roi / 100.0, i) - 1);
     }
 
-    return total / 12 / sum;
+    // monthly * (recurring + opportunity) * 12 == total
+    // monthly * recurring * 12 + monthly * opportunity * 12 == total
+    var monthly = total / 12 / (recurring + opportunity);
+
+    return {
+      monthly: monthly,
+      recurring_costs: monthly * recurring * 12,
+      opportunity_costs: monthly * opportunity * 12,
+    }
   }
 
   save_vs_rent() : number {

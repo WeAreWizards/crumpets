@@ -1,6 +1,6 @@
 <div style="width: 400px;float: right;">
   <h2>If you can rent a place for £{{ vm.presentable_result().rent_equivalent|number:0 }} then renting is cheaper.</h2>
-  <table>
+  <table border="1">
     <tr>
       <th>Cost after {{ vm.expected_stay_duration }} years</th>
       <th>Rent</th>
@@ -13,26 +13,26 @@
     </tr>
     <tr>
       <td>Recurring costs</td>
-      <td>£{{ vm.rent_recurring_costs() }}</td>
+      <td>£{{ vm.presentable_result().rent_recurring_costs|number:0 }}</td>
       <td>£{{ vm.presentable_result().buy_recurring_costs|number:0 }}</td>
     </tr>
     <tr>
       <td>Opportunity costs</td>
-      <td>£{{ vm.rent_opportunity_costs() }}</td>
+      <td>£{{ vm.presentable_result().rent_opportunity_costs|number:0 }}</td>
       <td>£{{ vm.presentable_result().buy_opportunity_costs|number:0 }}</td>
     </tr>
     <tr>
-      <td>Moving out profit</td>
+      <td>Moving on profit</td>
       <td>£{{ vm.rent_opportunity_costs() }}</td>
       <td>£{{ vm.presentable_result().buy_profit|number:0 }}</td>
     </tr>
     <tr>
       <td>total</td>
-      <td>£{{ vm.rent_opportunity_costs() }}</td>
+      <td>£{{ vm.presentable_result().buy_cost|number:0 }}</td>
       <td>£{{ vm.presentable_result().buy_cost|number:0 }}</td>
     </tr>
   </table>
-  <p>You'll safe £{{ vm.save_vs_rent() }} over your current rent.
+  <p>You'll save £{{ vm.save_vs_rent() }} over your current rent.
   </p>
   <p><a ng-click="vm.update_url()">Share</a>
   </p>
