@@ -20,7 +20,7 @@ interface IPresentableResult {
   buy_opportunity_costs: number;
   buy_transaction_costs: number;
   buy_cost: number;
-  buy_profit: number;
+  buy_proceeds: number;
 }
 
 interface IRentSplit {
@@ -140,16 +140,21 @@ class HomeController {
     // NB that we have to return the principal left to the bank after
     // we're moving out.
     var estate_agent_fees = 0.018 * final_sale_price;
-    var buy_profit = final_sale_price - principal_to_return - estate_agent_fees;
+
+    // NB that we count "profit" as negative
+    var buy_proceeds =  principal_to_return + estate_agent_fees - final_sale_price;
 
     var buy_cost = (
       buy_recurring_costs
         + buy_transaction_costs
         + buy_opportunity_costs
-        - buy_profit);
+        + buy_proceeds);
 
     var rent_split = this.rent_per_month_from_total(
       buy_cost, this.expected_stay_duration, this.rent_growth_rate, this.roi);
+
+    var current_rent_total = this.current_rent_total(
+      this.current_rent, this.rent_growth_rate, this.expected_stay_duration);
 
     return {
       rent_equivalent: rent_split.monthly,
@@ -159,14 +164,23 @@ class HomeController {
       buy_opportunity_costs: buy_opportunity_costs,
       buy_transaction_costs: buy_transaction_costs,
       buy_cost: buy_cost,
-      buy_profit: buy_profit
+      buy_proceeds: buy_proceeds,
+      save_vs_current_rent: current_rent_total - buy_cost,
     };
+  }
+
+  current_rent_total(current_rent: number, rent_growth_rate: number, expected_stay_duration: number): number {
+    var sum = 0;
+    for (var i = 0; i < expected_stay_duration; i++) {
+      sum += current_rent * 12 * Math.pow(1 + rent_growth_rate / 100.0, i);
+    }
+    return sum;
   }
 
   /**
    * Assume that the yearly costs increase with inflation.
    */
-  buy_upkeep_total(initial_yearly: number, inflation_rate: number, expected_stay_duration: number) {
+  buy_upkeep_total(initial_yearly: number, inflation_rate: number, expected_stay_duration: number): number {
     var sum = 0;
     for (var i = 0; i < expected_stay_duration; i++) {
       sum += initial_yearly * Math.pow(1 + inflation_rate / 100.0, i);
@@ -312,7 +326,7 @@ class HomeController {
   }
 
   stamp_duty(price: number): number {
-    // from Cincent's model
+    // from Vincent's model
     // https://www.moneyadviceservice.org.uk/en/tools/house-buying/stamp-duty-calculator
 
     // let's hope there are no trillion dollar flats ...

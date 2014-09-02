@@ -22,9 +22,9 @@
       <td>£{{ vm.presentable_result().buy_opportunity_costs|number:0 }}</td>
     </tr>
     <tr>
-      <td>Moving on profit</td>
+      <td>Proceeds</td>
       <td>£{{ vm.rent_opportunity_costs() }}</td>
-      <td>£{{ vm.presentable_result().buy_profit|number:0 }}</td>
+      <td>£{{ vm.presentable_result().buy_proceeds|number:0 }}</td>
     </tr>
     <tr>
       <td>total</td>
@@ -32,14 +32,15 @@
       <td>£{{ vm.presentable_result().buy_cost|number:0 }}</td>
     </tr>
   </table>
-  <p>You'll save £{{ vm.save_vs_rent() }} over your current rent.
+  <p>You'll save £{{ vm.presentable_result().save_vs_current_rent|number:0 }} over your current rent.
   </p>
   <p><a ng-click="vm.update_url()">Share</a>
   </p>
   <p>That's {{ vm.crumpet_equivalent() }} crumpets!
   </p>
 </div>
-<h2>Important facts</h2>
+
+<h2>Important values</h2>
 
 <p>House price <input ng-model="vm.price"></p>
 
@@ -54,7 +55,7 @@
 <p>How long are you planning on staying?<input ng-model="vm.expected_stay_duration"></p>
 
 
-<h2>Expecting the future</h2>
+<h2>Future values</h2>
 
 <p>Rate after fixed term ends?<input ng-model="vm.followup_rate"></p>
 
@@ -71,13 +72,13 @@ Common scenarios:
 <p>Return on investement?<input ng-model="vm.roi"></p>
 
 
-<h2>Keeping the status quo</h2>
+<h2>Maintaining the present</h2>
 
 <p>Yearly maintenance<input ng-model="vm.yearly_maintenance"></p>
 
 
 
-<h2>Other stuff</h2>
+<h2>Less important values</h2>
 
 <p>Total duration of mortgage?<input ng-model="vm.mortgage_duration_years"></p> (usually 25 years).
 
