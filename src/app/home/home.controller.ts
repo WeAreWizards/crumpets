@@ -165,10 +165,13 @@ class HomeController {
       buy_transaction_costs: buy_transaction_costs,
       buy_cost: buy_cost,
       buy_proceeds: buy_proceeds,
-      save_vs_current_rent: current_rent_total - buy_cost,
+      save_vs_current_rent: current_rent_total - buy_cost
     };
   }
 
+  /**
+   * How much would we be paying if we continued paying our normal rent for expected_stay_duration?
+   */
   current_rent_total(current_rent: number, rent_growth_rate: number, expected_stay_duration: number): number {
     var sum = 0;
     for (var i = 0; i < expected_stay_duration; i++) {
@@ -201,7 +204,7 @@ class HomeController {
     var recurring = 0;
     var opportunity = 0;
     for (var i = 0; i < years; i++) {
-      recurring += Math.pow(1 + (rent_increase) / 100.0, i);
+      recurring += Math.pow(1 + rent_increase / 100.0, i);
       opportunity += recurring * (Math.pow(1 + roi / 100.0, i) - 1);
     }
 
@@ -214,12 +217,8 @@ class HomeController {
     return {
       monthly: monthly,
       recurring_costs: monthly * recurring * 12,
-      opportunity_costs: monthly * opportunity * 12,
+      opportunity_costs: monthly * opportunity * 12
     }
-  }
-
-  save_vs_rent() : number {
-    return 100;
   }
 
   crumpet_equivalent(): number {
@@ -227,7 +226,6 @@ class HomeController {
   }
 
   update_url() {
-    this.$location.search("p", this.price);
     this.$location.search("p", this.price);
     this.$location.search("dp", this.down_payment);
     this.$location.search("ir", this.initial_rate);
@@ -341,7 +339,50 @@ class HomeController {
   }
 }
 
+/**
+ * Change inputs to add prefix or postfix (e.g. £ or %) while still
+ * parsing the input as a number.
+ *
+ * NB that this only works in combination with `ng-model-options="{
+ * updateOn: 'blur' }"`
+ */
+function MakeFormatter(prefix, postfix) {
+  var m_regex = new RegExp("^" + prefix + "([0-9]+)" + postfix + "$");
+  return function(): ng.IDirective {
+    return {
+      restrict: "A",
+      require: "ngModel",
+      link: function(scope: ng.IScope,
+                     instanceElement: any,
+                     instanceAttributes: ng.IAttributes,
+                     controller: any) {
+
+        function format(value) {
+          return prefix + value + postfix;
+        }
+
+        function parse(value) {
+          var m = m_regex.exec(value);
+          var value;
+          if (m == null) {
+            value = parseFloat(value) || 0;
+            controller.$setViewValue(prefix + value + postfix);
+            controller.$render();
+          } else {
+            value = parseFloat(m[1]);
+          }
+          return value;
+        }
+        controller.$formatters.push(format);
+        controller.$parsers.push(parse);
+      }
+    };
+  }
+}
+
 angular
-  .module("home.index", [
-  ])
-  .controller("HomeController", HomeController);
+  .module("home.index", [])
+  .controller("HomeController", HomeController)
+  .directive("poundPrefixer", MakeFormatter("£ ", ""))
+  .directive("percentPostfixer", MakeFormatter("", " %"))
+  .directive("yearPostfixer", MakeFormatter("", " years"));

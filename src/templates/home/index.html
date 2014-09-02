@@ -40,47 +40,56 @@
   </p>
 </div>
 
-<h2>Important values</h2>
+<div class="row">
+  <div class="large-6 columns">
+    <h2>Important values</h2>
+    <form ng-model-options="{ updateOn: 'blur' }">
+      <label>House price
+        <input type="text" ng-model="vm.price" pound-prefixer>
+      </label>
 
-<p>House price <input ng-model="vm.price"></p>
+      <label>Down payment
+        <input type="text" ng-model="vm.down_payment" pound-prefixer>
+      </label>
 
-<p>Down payment <input ng-model="vm.down_payment"></p>
+      <label>Initial mortgage rate?<input type="text" ng-model="vm.initial_rate" percent-postfixer></label>
 
-<p>Initial mortgage rate?<input ng-model="vm.initial_rate"></p>
+      <label>Duration of fixed mortgage?</label><input type="text" ng-model="vm.fixed_years" year-postfixer>
 
-<p>Duration of fixed mortgage?<input ng-model="vm.fixed_years"></p>
+      <label>what's your current rent?</label><input type="text" ng-model="vm.current_rent" pound-prefixer>
 
-<p>what's your current rent?<input ng-model="vm.current_rent"></p>
+      <label>How long are you planning on staying?</label><input type="text" ng-model="vm.expected_stay_duration" year-postfixer>
+    </form>
 
-<p>How long are you planning on staying?<input ng-model="vm.expected_stay_duration"></p>
+    <h2>Future values</h2>
+
+    <form ng-model-options="{ updateOn: 'blur' }">
+      <label>Rate after fixed term ends?<input type="text" ng-model="vm.followup_rate" percent-postfixer></label>
+
+      <label>Home price growth rate?<input type="text" ng-model="vm.price_growth_rate" percent-postfixer></label>
+
+      <label>Rent growth rate?<input type="text" ng-model="vm.rent_growth_rate" percent-postfixer></label>
+
+      <label>Inflation?<input type="text" ng-model="vm.inflation_rate" percent-postfixer></label>
+
+      <label>Return on investement?<input type="text" ng-model="vm.roi" percent-postfixer></label>
+    </form>
+
+    <h2>Maintaining the present</h2>
+
+    <form ng-model-options="{ updateOn: 'blur' }">
+      <label>Yearly maintenance<input type="text" ng-model="vm.yearly_maintenance"  pound-prefixer></label>
+    </form>
+
+    <h2>Less important values</h2>
+
+    <form ng-model-options="{ updateOn: 'blur' }">
+      <label>Total duration of mortgage?<input type="text" ng-model="vm.mortgage_duration_years" year-postfixer></label>
+    </form>
+
+  </div>
+</div>
 
 
-<h2>Future values</h2>
-
-<p>Rate after fixed term ends?<input ng-model="vm.followup_rate"></p>
-
-Common scenarios:
-
-5% 10% 15%
-
-<p>Home price growth rate?<input ng-model="vm.price_growth_rate"></p>
-
-<p>Rent growth rate?<input ng-model="vm.rent_growth_rate"></p>
-
-<p>Inflation?<input ng-model="vm.inflation_rate"></p>
-
-<p>Return on investement?<input ng-model="vm.roi"></p>
 
 
-<h2>Maintaining the present</h2>
-
-<p>Yearly maintenance<input ng-model="vm.yearly_maintenance"></p>
-
-
-
-<h2>Less important values</h2>
-
-<p>Total duration of mortgage?<input ng-model="vm.mortgage_duration_years"></p> (usually 25 years).
-
-
-<div id="price"></div>
