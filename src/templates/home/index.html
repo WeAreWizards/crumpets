@@ -42,49 +42,118 @@
 
 <div class="row">
   <div class="large-6 columns">
-    <h2>Important values</h2>
+    <h2>Values</h2>
     <form ng-model-options="{ updateOn: 'blur' }">
-      <label>House price
-        <input type="text" ng-model="vm.price" pound-prefixer>
+
+      <label>
+        <div class="row">
+          <div class="large-12 columns">
+            <h5>Home Price</h5>
+            The more you pay for your place the higher the stamp duty will be.
+          </div>
+          <div class="large-4 small-6 columns">
+            <input type="tel" pattern="\d*" ng-model="vm.price" pound-prefixer>
+          </div>
+          <div class="large-8 columns">
+          </div>
       </label>
 
-      <label>Down payment
-        <input type="text" ng-model="vm.down_payment" pound-prefixer>
+      <label>
+        <div class="row">
+          <div class="large-12 columns">
+            <h5>Down Payment</h5> A larger down payment usually gives
+        you better mortgage options. Note that investing in your home
+        means you are not investing into anything else which is a
+        missed opportunity cost.
+          </div>
+          <div class="large-4 small-6 columns">
+            <input type="tel" ng-model="vm.down_payment" pound-prefixer>
+          </div>
+          <div class="large-8 columns">
+          </div>
       </label>
 
-      <label>Initial mortgage rate?<input type="text" ng-model="vm.initial_rate" percent-postfixer></label>
+      <label>
+        <div class="row">
+          <div class="large-12 columns">
+            <h5>Initial Mortgage</h5> The most common mortgage in the
+        UK has a fixed rate for a certain amount of time, usually
+        between 2 and 10 years. Enter here how much the initial, fixed
+        rate will be.
+          </div>
+          <div class="large-4 small-6 columns">
+            <input type="tel" ng-model="vm.initial_rate" percent-postfixer>
+          </div>
+          <div class="large-8 columns">
+          </div>
+      </label>
 
-      <label>Duration of fixed mortgage?</label><input type="text" ng-model="vm.fixed_years" year-postfixer>
+      <label>
+        <div class="row">
+          <div class="large-12 columns">
+            Fixed for.
+          </div>
+          <div class="large-4 small-6 columns">
+            <input type="tel" ng-model="vm.fixed_years" year-postfixer>
+          </div>
+          <div class="large-8 columns">
+          </div>
+      </label>
 
-      <label>what's your current rent?</label><input type="text" ng-model="vm.current_rent" pound-prefixer>
+      <label>
+        <div class="row">
+          <div class="large-12 columns">
+            <h5>Expected stay</h5>When you stay longer then the
+            transaction costs like stamp duty matter less. You will also
+            have paid off more of the loan, and value of your home will have changed.
+          </div>
+          <div class="large-4 small-6 columns">
+            <input type="tel" ng-model="vm.expected_stay_duration" year-postfixer>
+          </div>
+          <div class="large-8 columns">
+          </div>
+      </label>
 
-      <label>How long are you planning on staying?</label><input type="text" ng-model="vm.expected_stay_duration" year-postfixer>
+      <label>
+        <div class="row">
+          <div class="large-12 columns">
+            <h5>Current Rent</h5>Optional. Specifying your current
+        rent allows you to calculate how much you would save or pay
+        extra when buying a place.
+          </div>
+          <div class="large-4 small-6 columns">
+            <input type="tel" ng-model="vm.current_rent" pound-prefixer>
+      </div>
+          <div class="large-8 columns">
+          </div>
+      </label>
+
     </form>
 
     <h2>Future values</h2>
 
     <form ng-model-options="{ updateOn: 'blur' }">
-      <label>Rate after fixed term ends?<input type="text" ng-model="vm.followup_rate" percent-postfixer></label>
+      <label>Rate after fixed term ends?<input type="tel" ng-model="vm.followup_rate" percent-postfixer></label>
 
-      <label>Home price growth rate?<input type="text" ng-model="vm.price_growth_rate" percent-postfixer></label>
+      <label>Home price growth rate?<input type="tel" ng-model="vm.price_growth_rate" percent-postfixer></label>
 
-      <label>Rent growth rate?<input type="text" ng-model="vm.rent_growth_rate" percent-postfixer></label>
+      <label>Rent growth rate?<input type="tel" ng-model="vm.rent_growth_rate" percent-postfixer></label>
 
-      <label>Inflation?<input type="text" ng-model="vm.inflation_rate" percent-postfixer></label>
+      <label>Inflation?<input type="tel" ng-model="vm.inflation_rate" percent-postfixer></label>
 
-      <label>Return on investement?<input type="text" ng-model="vm.roi" percent-postfixer></label>
+      <label>Return on investement?<input type="tel" ng-model="vm.roi" percent-postfixer></label>
     </form>
 
     <h2>Maintaining the present</h2>
 
     <form ng-model-options="{ updateOn: 'blur' }">
-      <label>Yearly maintenance<input type="text" ng-model="vm.yearly_maintenance"  pound-prefixer></label>
+      <label>Yearly maintenance<input type="tel" ng-model="vm.yearly_maintenance"  pound-prefixer></label>
     </form>
 
     <h2>Less important values</h2>
 
     <form ng-model-options="{ updateOn: 'blur' }">
-      <label>Total duration of mortgage?<input type="text" ng-model="vm.mortgage_duration_years" year-postfixer></label>
+      <label>Total duration of mortgage?<input type="tel" ng-model="vm.mortgage_duration_years" year-postfixer></label>
     </form>
 
   </div>

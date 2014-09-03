@@ -62,7 +62,7 @@ class HomeController {
     this.current_rent = $location.search().cr || 1100;
     this.expected_stay_duration = $location.search().esd || 6;
     this.followup_rate = $location.search().fr || 8;
-    this.price_growth_rate = $location.search().pgr || 3;
+    this.price_growth_rate = $location.search().pgr || 2;
     this.rent_growth_rate = $location.search().rgr || 5;
     this.inflation_rate = $location.search().inr || 2.6;
     this.roi = $location.search().roi || 1;
