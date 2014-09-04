@@ -1,42 +1,42 @@
 <div style="width: 400px;float: right;">
-  <h2>If you can rent a place for £{{ vm.presentable_result().rent_equivalent|number:0 }} then renting is cheaper.</h2>
+  <h2>If you can rent a place for £{{ vm.result.rent.amount|number:0 }} then renting is cheaper.</h2>
   <table border="1">
     <tr>
-      <th>Cost after {{ vm.expected_stay_duration }} years</th>
+      <th>Cost after {{ vm.data.expectedStayDuration }} years</th>
       <th>Rent</th>
       <th>Buy</th>
     </tr>
     <tr>
       <td>Initial costs</td>
-      <td>£{{ vm.rent_transaction_costs() }}</td>
-      <td>£{{ vm.presentable_result().buy_transaction_costs|number:0 }}</td>
+      <td>£{{ vm.rent_transaction_costs() }}</td> <!-- TODO: didn't exist -->
+      <td>£{{ vm.result.house.transactionCosts|number:0 }}</td>
     </tr>
     <tr>
       <td>Recurring costs</td>
-      <td>£{{ vm.presentable_result().rent_recurring_costs|number:0 }}</td>
-      <td>£{{ vm.presentable_result().buy_recurring_costs|number:0 }}</td>
+      <td>£{{ vm.result.rent.recurringCosts|number:0 }}</td>
+      <td>£{{ vm.result.house.recurringCosts|number:0 }}</td>
     </tr>
     <tr>
       <td>Opportunity costs</td>
-      <td>£{{ vm.presentable_result().rent_opportunity_costs|number:0 }}</td>
-      <td>£{{ vm.presentable_result().buy_opportunity_costs|number:0 }}</td>
+      <td>£{{ vm.result.rent.opportunityCosts|number:0 }}</td>
+      <td>£{{ vm.result.house.opportunityCosts|number:0 }}</td>
     </tr>
     <tr>
       <td>Proceeds</td>
-      <td>£{{ vm.rent_opportunity_costs() }}</td>
-      <td>£{{ vm.presentable_result().buy_proceeds|number:0 }}</td>
+      <td>£{{ vm.rent_opportunity_costs() }}</td>  <!-- TODO: didn't exist -->
+      <td>£{{ vm.result.house.proceeds|number:0 }}</td>
     </tr>
     <tr>
       <td>total</td>
-      <td>£{{ vm.presentable_result().buy_cost|number:0 }}</td>
-      <td>£{{ vm.presentable_result().buy_cost|number:0 }}</td>
+      <td>£{{vm.result.house.totalCost|number:0 }}</td>
+      <td>£{{ vm.result.house.totalCost|number:0 }}</td>
     </tr>
   </table>
-  <p>You'll save £{{ vm.presentable_result().save_vs_current_rent|number:0 }} over your current rent.
+  <p>You'll save £{{ vm.result.saveVSRent|number:0 }} over your current rent.
   </p>
-  <p><a ng-click="vm.update_url()">Share</a>
+  <p><a ng-click="">Share</a>
   </p>
-  <p>That's {{ vm.crumpet_equivalent() }} crumpets!
+  <p>That's {{ vm.inCrumpets() }} crumpets!
   </p>
 </div>
 
@@ -44,7 +44,6 @@
   <div class="large-6 columns">
     <h2>Values</h2>
     <form ng-model-options="{ updateOn: 'blur' }">
-
       <label>
         <div class="row">
           <div class="large-12 columns">
@@ -52,7 +51,7 @@
             The more you pay for your place the higher the stamp duty will be.
           </div>
           <div class="large-4 small-6 columns">
-            <input type="tel" pattern="\d*" ng-model="vm.price" pound-prefixer>
+            <input type="tel" pattern="\d*" ng-model="vm.data.housePrice" waw-prefix="£" ng-change="vm.compute()">
           </div>
           <div class="large-8 columns">
           </div>
@@ -67,7 +66,7 @@
         missed opportunity cost.
           </div>
           <div class="large-4 small-6 columns">
-            <input type="tel" ng-model="vm.down_payment" pound-prefixer>
+            <input type="tel" ng-model="vm.data.mortgage.downPayment" waw-prefix="£" ng-change="vm.compute()">
           </div>
           <div class="large-8 columns">
           </div>
@@ -82,7 +81,7 @@
         rate will be.
           </div>
           <div class="large-4 small-6 columns">
-            <input type="tel" ng-model="vm.initial_rate" percent-postfixer>
+            <input type="tel" ng-model="vm.data.mortgage.initialRate" waw-postfix="%" ng-change="vm.compute()">
           </div>
           <div class="large-8 columns">
           </div>
@@ -94,7 +93,7 @@
             Fixed for.
           </div>
           <div class="large-4 small-6 columns">
-            <input type="tel" ng-model="vm.fixed_years" year-postfixer>
+            <input type="tel" ng-model="vm.data.mortgage.fixedDuration" waw-postfix="years" ng-change="vm.compute()">
           </div>
           <div class="large-8 columns">
           </div>
@@ -108,7 +107,7 @@
             have paid off more of the loan, and value of your home will have changed.
           </div>
           <div class="large-4 small-6 columns">
-            <input type="tel" ng-model="vm.expected_stay_duration" year-postfixer>
+            <input type="tel" ng-model="vm.data.expectedStayDuration" waw-postfix="years" ng-change="vm.compute()">
           </div>
           <div class="large-8 columns">
           </div>
@@ -122,7 +121,7 @@
         extra when buying a place.
           </div>
           <div class="large-4 small-6 columns">
-            <input type="tel" ng-model="vm.current_rent" pound-prefixer>
+            <input type="tel" ng-model="vm.data.currentRent" waw-prefix="£" ng-change="vm.compute()">
       </div>
           <div class="large-8 columns">
           </div>
@@ -133,27 +132,27 @@
     <h2>Future values</h2>
 
     <form ng-model-options="{ updateOn: 'blur' }">
-      <label>Rate after fixed term ends?<input type="tel" ng-model="vm.followup_rate" percent-postfixer></label>
+      <label>Rate after fixed term ends?<input type="tel" ng-model="vm.data.mortgage.followupRate" waw-postfix="%" ng-change="vm.compute()"></label>
 
-      <label>Home price growth rate?<input type="tel" ng-model="vm.price_growth_rate" percent-postfixer></label>
+      <label>Home price growth rate?<input type="tel" ng-model="vm.data.housePriceGrowthRate" waw-postfix="%" ng-change="vm.compute()"></label>
 
-      <label>Rent growth rate?<input type="tel" ng-model="vm.rent_growth_rate" percent-postfixer></label>
+      <label>Rent growth rate?<input type="tel" ng-model="vm.data.rentGrowthRate" waw-postfix="%" ng-change="vm.compute()"></label>
 
-      <label>Inflation?<input type="tel" ng-model="vm.inflation_rate" percent-postfixer></label>
+      <label>Inflation?<input type="tel" ng-model="vm.data.inflationRate" waw-postfix="%" ng-change="vm.compute()"></label>
 
-      <label>Return on investement?<input type="tel" ng-model="vm.roi" percent-postfixer></label>
+      <label>Return on investement?<input type="tel" ng-model="vm.data.roi" waw-postfix="%" ng-change="vm.compute()"></label>
     </form>
 
     <h2>Maintaining the present</h2>
 
     <form ng-model-options="{ updateOn: 'blur' }">
-      <label>Yearly maintenance<input type="tel" ng-model="vm.yearly_maintenance"  pound-prefixer></label>
+      <label>Yearly maintenance<input type="tel" ng-model="vm.data.yearlyMaintenance" waw-prefix="£" ng-change="vm.compute()"></label>
     </form>
 
     <h2>Less important values</h2>
 
     <form ng-model-options="{ updateOn: 'blur' }">
-      <label>Total duration of mortgage?<input type="tel" ng-model="vm.mortgage_duration_years" year-postfixer></label>
+      <label>Total duration of mortgage?<input type="tel" ng-model="vm.data.mortgage.totalDuration" waw-postfix="years" ng-change="vm.compute()"></label>
     </form>
 
   </div>
