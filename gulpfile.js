@@ -4,6 +4,7 @@ plugins.ngAnnotate = require('gulp-ng-annotate');
 
 var runSequence = require('run-sequence');
 var browserSync = require('browser-sync');
+var awspublish = require('gulp-awspublish');
 
 
 // VARIABLES ======================================================
@@ -178,4 +179,18 @@ gulp.task('build', function () {
 
 gulp.task('default', ['build'], function () {
     return runSequence(['watch', 'karma-watch']);
+});
+
+gulp.task('s3publish', function() {
+  var publisher = awspublish.create({
+    region: process.env.AWS_REGION,
+    key: process.env.CRUMPETS_KEY_ID,
+    secret: process.env.CRUMPETS_KEY_SECRET,
+    bucket: process.env.CRUMPETS_BUCKET
+  });
+
+  gulp.src('./' + outputFolder + '/**')
+             .pipe(publisher.publish())
+             .pipe(publisher.sync())
+             .pipe(awspublish.reporter());
 });
