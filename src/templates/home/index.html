@@ -52,11 +52,14 @@
             <h5>Home Price</h5>
             The more you pay for your place the higher the stamp duty will be.
           </div>
+        </div>
+        <div class="row">
           <div class="large-4 small-6 columns">
             <input type="tel" pattern="\d*" ng-model="vm.data.housePrice" waw-prefix="£" ng-change="vm.compute()">
           </div>
           <div class="large-8 columns">
           </div>
+        </div>
       </label>
 
       <label>
@@ -67,11 +70,14 @@
         means you are not investing into anything else which is a
         missed opportunity cost.
           </div>
+        </div>
+        <div class="row">
           <div class="large-4 small-6 columns">
             <input type="tel" ng-model="vm.data.mortgage.downPayment" waw-prefix="£" ng-change="vm.compute()">
           </div>
           <div class="large-8 columns">
           </div>
+        </div>
       </label>
 
       <label>
@@ -82,11 +88,14 @@
         between 2 and 10 years. Enter here how much the initial, fixed
         rate will be.
           </div>
+        </div>
+        <div class="row">
           <div class="large-4 small-6 columns">
             <input type="tel" ng-model="vm.data.mortgage.initialRate" waw-postfix="%" ng-change="vm.compute()">
           </div>
           <div class="large-8 columns">
           </div>
+        </div>
       </label>
 
       <label>
@@ -94,11 +103,14 @@
           <div class="large-12 columns">
             Fixed for.
           </div>
+        </div>
+        <div class="row">
           <div class="large-4 small-6 columns">
             <input type="tel" ng-model="vm.data.mortgage.fixedDuration" waw-postfix="years" ng-change="vm.compute()">
           </div>
           <div class="large-8 columns">
           </div>
+        </div>
       </label>
 
       <label>
@@ -108,25 +120,31 @@
             transaction costs like stamp duty matter less. You will also
             have paid off more of the loan, and value of your home will have changed.
           </div>
+        </div>
+        <div class="row">
           <div class="large-4 small-6 columns">
             <input type="tel" ng-model="vm.data.expectedStayDuration" waw-postfix="years" ng-change="vm.compute()">
           </div>
           <div class="large-8 columns">
           </div>
+        </div>
       </label>
 
       <label>
         <div class="row">
           <div class="large-12 columns">
             <h5>Current Rent</h5>Optional. Specifying your current
-        rent allows you to calculate how much you would save or pay
-        extra when buying a place.
+            rent allows you to calculate how much you would save or pay
+            extra when buying a place.
           </div>
+        </div>
+        <div class="row">
           <div class="large-4 small-6 columns">
             <input type="tel" ng-model="vm.data.currentRent" waw-prefix="£" ng-change="vm.compute()">
-      </div>
+          </div>
           <div class="large-8 columns">
           </div>
+        </div>
       </label>
 
     </form>
@@ -134,27 +152,128 @@
     <h2>Future values</h2>
 
     <form ng-model-options="{ updateOn: 'blur' }">
-      <label>Rate after fixed term ends?<input type="tel" ng-model="vm.data.mortgage.followupRate" waw-postfix="%" ng-change="vm.compute()"></label>
+      <label>
+        <div class="row">
+          <div class="large-12 columns">
+            <h5>Morgage followup rate</h5> The rate in a few years is
+            usually based on the Bank of England Base Rate which is at a
+            historicaly. The follow up rate will probably be higher, maybe
+            even considerably so.
+          </div>
+        </div>
+        <div class="row">
+          <div class="large-4 small-6 columns">
+            <input type="tel" ng-model="vm.data.mortgage.followupRate" waw-postfix="%" ng-change="vm.compute()">
+            <div class="large-8 columns">
+            </div>
+          </div>
+        </div>
+      </label>
 
-      <label>Home price growth rate?<input type="tel" ng-model="vm.data.housePriceGrowthRate" waw-postfix="%" ng-change="vm.compute()"></label>
+      <label>
+        <div class="row">
+          <div class="large-12 columns">
+            <h5>Home price growth rate</h5>In some places like London
+            home prices mostly go up. In other places prices could
+            drop dramatically.
+          </div>
+        </div>
+        <div class="row">
+          <div class="large-4 small-6 columns">
+            <input type="tel" ng-model="vm.data.housePriceGrowthRate" waw-postfix="%" ng-change="vm.compute()">
+            <div class="large-8 columns">
+            </div>
+          </div>
+        </div>
+      </label>
 
-      <label>Rent growth rate?<input type="tel" ng-model="vm.data.rentGrowthRate" waw-postfix="%" ng-change="vm.compute()"></label>
+      <label>
+        <div class="row">
+          <div class="large-12 columns">
+            <h5>Rent growth rate</h5>Rent increase is also highly
+            location dependent: Up and trending and you can see 10%
+            per year. In other places the rent hasn't moved for many
+            years.
+          </div>
+        </div>
+        <div class="row">
+          <div class="large-4 small-6 columns">
+            <input type="tel" ng-model="vm.data.rentGrowthRate" waw-postfix="%" ng-change="vm.compute()">
+            <div class="large-8 columns">
+            </div>
+          </div>
+        </div>
+      </label>
 
-      <label>Inflation?<input type="tel" ng-model="vm.data.inflationRate" waw-postfix="%" ng-change="vm.compute()"></label>
+      <label>
+        <div class="row">
+          <div class="large-12 columns">
+            <h5>Inflation</h5>The inflation rate changes how much your recurring costs increase.
+          </div>
+        </div>
+        <div class="row">
+          <div class="large-4 small-6 columns">
+            <input type="tel" ng-model="vm.data.inflationRate" waw-postfix="%" ng-change="vm.compute()">
+            <div class="large-8 columns">
+            </div>
+          </div>
+        </div>
+      </label>
 
-      <label>Return on investement?<input type="tel" ng-model="vm.data.roi" waw-postfix="%" ng-change="vm.compute()"></label>
+      <label>
+        <div class="row">
+          <div class="large-12 columns">
+            <h5>Return on investment</h5>Instead of buying a home you
+            could invest your money into a fund. Specify here how much
+            return you'd expect on your money.
+          </div>
+        </div>
+        <div class="row">
+          <div class="large-4 small-6 columns">
+            <input type="tel" ng-model="vm.data.roi" waw-postfix="%" ng-change="vm.compute()">
+            <div class="large-8 columns">
+            </div>
+          </div>
+        </div>
+      </label>
+
     </form>
 
-    <h2>Maintaining the present</h2>
+    <h2>Other values</h2>
 
     <form ng-model-options="{ updateOn: 'blur' }">
-      <label>Yearly maintenance<input type="tel" ng-model="vm.data.yearlyMaintenance" waw-prefix="£" ng-change="vm.compute()"></label>
-    </form>
+      <label>
+        <div class="row">
+          <div class="large-12 columns">
+            <h5>Yearly maintenance</h5> How much will you be paying
+            for ground rent, building fees and other, recurring items
+          </div>
+        </div>
+        <div class="row">
+          <div class="large-4 small-6 columns">
+            <input type="tel" ng-model="vm.data.yearlyMaintenance" waw-prefix="£" ng-change="vm.compute()">
+            <div class="large-8 columns">
+            </div>
+          </div>
+        </div>
+      </label>
 
-    <h2>Less important values</h2>
+      <label>
+        <div class="row">
+          <div class="large-12 columns">
+            <h5>Duration of mortgage</h5>The most common mortgage runs
+            for 25 years.
+          </div>
+        </div>
+        <div class="row">
+          <div class="large-4 small-6 columns">
+            <input type="tel" ng-model="vm.data.mortgage.totalDuration" waw-postfix="years" ng-change="vm.compute()">
+            <div class="large-8 columns">
+            </div>
+          </div>
+        </div>
+      </label>
 
-    <form ng-model-options="{ updateOn: 'blur' }">
-      <label>Total duration of mortgage?<input type="tel" ng-model="vm.data.mortgage.totalDuration" waw-postfix="years" ng-change="vm.compute()"></label>
     </form>
 
   </div>
