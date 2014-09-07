@@ -1,12 +1,15 @@
 <div class="row" style="width: 400px; position: fixed; top: 10px; right: 20px;">
   <div class="large-12 columns">
-    <h2>If you can rent a place for £{{ vm.result.rent.amount|number:0 }} then renting is cheaper.</h2>
+    <h3>If you can rent a place for £{{ vm.result.rent.amount|number:0 }} then renting is cheaper.</h3>
     <table border="1">
+      <thead>
       <tr>
         <th>Cost after {{ vm.data.expectedStayDuration }} years</th>
         <th>Rent</th>
         <th>Buy</th>
       </tr>
+      </thead>
+      <tbody>
       <tr>
         <td>Initial costs</td>
         <td>£{{ vm.rent_transaction_costs() }}</td> <!-- TODO: didn't exist -->
@@ -32,7 +35,9 @@
         <td>£{{vm.result.house.totalCost|number:0 }}</td>
         <td>£{{ vm.result.house.totalCost|number:0 }}</td>
       </tr>
+      </tbody>
     </table>
+
     <p>You'll save £{{ vm.result.saveVSRent|number:0 }} over your current rent.
     </p>
     <p><a ng-click="">Share</a>
