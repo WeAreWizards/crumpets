@@ -29,3 +29,20 @@ If you don't have a global gulp installation use the following.
 ```
 alias gulp="node ./node_modules/gulp/bin/gulp.js"
 ```
+
+## Deploy
+
+Once the S3 bucket is available, you can use the `gulp s3publish` task.
+
+You will need the secret environment variables configured. To do so decrypt the
+key.encrypted with the following command :
+
+```bash
+$ gpg --decrypt -o keys.exports keys.exports.gpg
+```
+
+And then source it
+
+```bash
+$ source keys.exports
+```
