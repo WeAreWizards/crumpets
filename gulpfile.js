@@ -5,6 +5,7 @@ plugins.ngAnnotate = require('gulp-ng-annotate');
 var runSequence = require('run-sequence');
 var browserSync = require('browser-sync');
 var awspublish = require('gulp-awspublish');
+var cloudfront = require('gulp-cloudfront');
 
 
 // VARIABLES ======================================================
@@ -182,15 +183,20 @@ gulp.task('default', ['build'], function () {
 });
 
 gulp.task('s3publish', function() {
-  var publisher = awspublish.create({
+  var aws = {
     region: process.env.AWS_REGION,
     key: process.env.CRUMPETS_KEY_ID,
     secret: process.env.CRUMPETS_KEY_SECRET,
-    bucket: process.env.CRUMPETS_BUCKET
-  });
+    bucket: process.env.CRUMPETS_BUCKET,
+    distributionId: process.env.CRUMPETS_DISTRIBUTION_ID
+  }
+  var publisher = awspublish.create(aws);
+  var headers = {'Cache-Control': 'max-age=315360000, no-transform, public'};
 
   gulp.src('./' + outputFolder + '/**')
-             .pipe(publisher.publish())
-             .pipe(publisher.sync())
-             .pipe(awspublish.reporter());
+             .pipe(awspublish.gzip())
+             .pipe(publisher.publish(headers))
+             .pipe(publisher.cache())
+             .pipe(awspublish.reporter())
+             .pipe(cloudfront());
 });

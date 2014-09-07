@@ -9,6 +9,7 @@
     "chai-as-promised": "^4.1.1",
     "gulp": "^3.8.6",
     "gulp-awspublish": "0.0.23",
+    "gulp-cloudfront": "0.0.14",
     "gulp-concat": "^2.3.4",
     "gulp-inject": "^1.0.1",
     "gulp-karma": "git://github.com/lazd/gulp-karma.git#adb54c4fdddb442778aa114343645b75192e41e5",
