@@ -5,7 +5,7 @@ interface IMonthlyMortgageAmounts {
   initial: number;
   followup: number;
 }
-x
+
 
 class Mortgage implements app.IMortgageService {
   private transformData(data: app.IMortgageData): app.IMortgageData {
