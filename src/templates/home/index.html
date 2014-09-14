@@ -12,7 +12,7 @@
       <tbody>
       <tr>
         <td>Initial costs</td>
-        <td>£{{ vm.rent_transaction_costs() }}</td> <!-- TODO: didn't exist -->
+        <td>£{{ vm.result.rent.deposit|number:0 }}</td>
         <td>£{{ vm.result.house.transactionCosts|number:0 }}</td>
       </tr>
       <tr>
@@ -27,7 +27,7 @@
       </tr>
       <tr>
         <td>Proceeds</td>
-        <td>£{{ vm.rent_opportunity_costs() }}</td>  <!-- TODO: didn't exist -->
+        <td>£{{ vm.result.rent.depositReturn|number:0 }}</td>
         <td>£{{ vm.result.house.proceeds|number:0 }}</td>
       </tr>
       <tr>
