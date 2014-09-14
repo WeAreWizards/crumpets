@@ -25,8 +25,9 @@ class Rent implements app.IRentService {
     // We know how much the total costs will be for a house and we
     // need to solve for the rent equivalent. Rent usually increases
     // once a year so  we need to solve
+    //
     // rent + 1.05 * rent + 1.05 ** 2 * rent + .... == total
-    // rent (1 + 1.05 + 1.05**2 + ...) == total
+    // <=> rent (1 + 1.05 + 1.05**2 + ...) == total
     var recurring = 0;
     var opportunity = 0;
     for (var i = 0; i < expectedStayDuration; i++) {
@@ -34,16 +35,19 @@ class Rent implements app.IRentService {
       opportunity += recurring * (Math.pow(1 + roi / 100.0, i) - 1);
     }
 
-    // TODO(tom): deposit + deposit * roi after moving out + estate agent fees
-
     // monthly * (recurring + opportunity) * 12 == total
     // monthly * recurring * 12 + monthly * opportunity * 12 == total
     var monthly = total / 12 / (recurring + opportunity);
 
+    // Assuming the deposit is 6 weeks.
+    var deposit = Math.round(monthly * 1.5);
+
     return {
       amount: Math.round(monthly),
       recurringCosts: Math.round(monthly * recurring * 12),
-      opportunityCosts: Math.round(monthly * opportunity * 12)
+      opportunityCosts: Math.round(monthly * opportunity * 12),
+      deposit: deposit,
+      depositReturn: -deposit
     };
   }
 
