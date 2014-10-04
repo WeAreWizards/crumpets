@@ -24,5 +24,4 @@ describe('Unit: Mortgage service', function () {
         };
         expect(mortgageService.transformData(mortgageData)).to.deep.equal(expectedData);
     });
-
 });

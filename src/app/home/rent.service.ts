@@ -28,6 +28,22 @@ class Rent implements app.IRentService {
     //
     // rent + 1.05 * rent + 1.05 ** 2 * rent + .... == total
     // <=> rent (1 + 1.05 + 1.05**2 + ...) == total
+    //
+    // At the same time paying rent is the same as paying into a
+    // sinking fund. At the end opportunity costs and rent paid sum to
+    // a total.
+    //
+    // Specific example: 100 pounds rent / month, 10% increase per
+    // year, opportunity cost 10%.
+    //
+    // month | pay | opportunity cost
+    //     0 | 100 | 0
+    //     1 | 200 | 100 * (.1/12)
+    //     2 | 300 | 100 * (.1/12)**2 + 100 * (.1/12)
+    //     3 | 400 |
+    //     ...
+    //    13 | 110 | 100 * (.1/12)**13 + 110 * (.1/12)
+
     var recurring = 0;
     var opportunity = 0;
     for (var i = 0; i < expectedStayDuration; i++) {

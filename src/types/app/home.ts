@@ -60,6 +60,9 @@ declare module app {
 
   interface IMortgageService {
     getAmounts(data: IMortgageData, housePrice: number, expectedStayDuration: number): IMortgageResults;
+    getOpportunityCosts(data: IMortgageData, housePrice: number, expectedStayDuration: number,
+                        initialCosts: number, roi: number): number;
+
   }
 
   interface IRentService {

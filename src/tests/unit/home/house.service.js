@@ -20,4 +20,28 @@ describe('Unit: House service', function () {
             expect(houseService.getStampDutyAmount(values[i].price)).to.equal(Math.round(values[i].stampDuty));
         }
     });
+
+    it('should calculate the recurring opportunity costs correctly (sinking fund)', function () {
+        var data = {
+            mortgage: {
+                downPayment: 0,
+                initialRate: 1,
+                followupRate: 0,
+                fixedDuration: 1,
+                totalDuration: 1
+            },
+            roi: 1,
+            expectedStayDuration: 1,
+            yearlyMaintenance: 0,
+            inflationRate: 0,
+            housePrice: 100,
+            housePriceGrowthRate: 1,
+        }
+        var costs = houseService.getCosts(data);
+        // The following is calculated using a sinking fund seeded
+        // with 2000 pounds which we used for transactions costs. The
+        // down payment for 1 year installments for 100 pounds and 0
+        // down payment are 8 pounds
+        expect(costs.opportunityCosts).to.equal(20.533146291310004);
+    });
 });

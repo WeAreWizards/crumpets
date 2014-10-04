@@ -39,19 +39,11 @@ class House implements app.IHouseService {
    * Calculates all the various costs given the input data
    */
   getCosts(data) {
-    // How much would we have made on our down payment?
-    var opportunityCosts = (
-      data.mortgage.downPayment
-      * Math.pow(1 + data.roi / 100.0, data.expectedStayDuration)
-      - data.mortgage.downPayment
-    );
-
     // Gets the amount we will pay for the time we stay and the amount
     // we will need to return
     var mortgageAmounts = this.Mortgage.getAmounts(
       data.mortgage, data.housePrice, data.expectedStayDuration
     );
-
     // What are we paying every month/year: mortgage + maintenance
     var recurringCosts = (
       this.getUpkeepTotal(data.yearlyMaintenance, data.inflationRate, data.expectedStayDuration)
@@ -64,6 +56,11 @@ class House implements app.IHouseService {
       this.getStampDutyAmount(data.housePrice)
       + 2000
       +  1.0 * data.mortgage.downPayment
+    );
+
+    var opportunityCosts = this.Mortgage.getOpportunityCosts(
+      data.mortgage, data.housePrice, data.expectedStayDuration,
+      data.mortgage.downPayment + transactionCosts, data.roi
     );
 
     // How much will the house be worth after expectedStayDuration years
